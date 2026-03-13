@@ -1,5 +1,6 @@
 export { enUS } from "./locales/en-US";
 export { zhCN } from "./locales/zh-CN";
+export { trTR } from "./locales/tr-TR";
 export type { Translations } from "./locales/types";
 export {
   DEFAULT_LOCALE,
