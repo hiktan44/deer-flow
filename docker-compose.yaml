@@ -8,8 +8,6 @@ services:
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
-    ports:
-      - "80:80"
     depends_on:
       - gateway
       - frontend
