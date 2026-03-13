@@ -1,6 +1,6 @@
 # DeerFlow — Coolify Production Deployment
-# Tüm API key'ler Coolify Environment Variables üzerinden geçirilir
-# .env dosyasına bağımlılık YOK
+# Tüm config dosyaları Dockerfile'a build sırasında kopyalanır
+# Volume mount YOK — Coolify uyumlu
 
 services:
   # ── Reverse Proxy ──────────────────────────────────────────────────────────
@@ -39,6 +39,7 @@ services:
     container_name: deer-flow-frontend
     environment:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-defaultsecret123456789012345678901234567890}
+      - BETTER_AUTH_BASE_URL=${BETTER_AUTH_BASE_URL:-http://localhost:2026}
     networks:
       - deer-flow
     restart: unless-stopped
@@ -47,14 +48,9 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/Dockerfile.production
     container_name: deer-flow-gateway
     command: sh -c "cd backend && uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 --workers 2"
-    volumes:
-      - ./config.production.yaml:/app/backend/config.yaml:ro
-      - ./extensions_config.production.json:/app/backend/extensions_config.json:ro
-      - ./skills:/app/skills:ro
-      - deer-flow-data:/app/backend/.deer-flow
     working_dir: /app
     environment:
       - CI=true
@@ -77,15 +73,9 @@ services:
   langgraph:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/Dockerfile.production
     container_name: deer-flow-langgraph
     command: sh -c "cd /app/backend && uv run langgraph dev --no-browser --allow-blocking --no-reload --host 0.0.0.0 --port 2024"
-    volumes:
-      - ./config.production.yaml:/app/config.yaml:ro
-      - ./extensions_config.production.json:/app/extensions_config.json:ro
-      - deer-flow-data:/app/backend/.deer-flow
-      - ./skills:/app/skills:ro
-      - langgraph-api-data:/app/backend/.langgraph_api
     environment:
       - CI=true
       - DEER_FLOW_HOME=/app/backend/.deer-flow
@@ -99,12 +89,6 @@ services:
     networks:
       - deer-flow
     restart: unless-stopped
-
-volumes:
-  deer-flow-data:
-    driver: local
-  langgraph-api-data:
-    driver: local
 
 networks:
   deer-flow:
