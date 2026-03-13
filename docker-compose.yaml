@@ -1,6 +1,6 @@
 # DeerFlow — Coolify Production Deployment
-# Tüm config dosyaları Dockerfile'a build sırasında kopyalanır
-# Volume mount YOK — Coolify uyumlu
+# ⚠️ container_name YOK — Coolify kendi adlandırma kuralını uyguluyor
+# ⚠️ Volume mount YOK — config dosyaları Dockerfile'a COPY ediliyor
 
 services:
   # ── Reverse Proxy ──────────────────────────────────────────────────────────
@@ -8,16 +8,12 @@ services:
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
-    container_name: deer-flow-nginx
     ports:
       - "${PORT:-2026}:2026"
     depends_on:
-      gateway:
-        condition: service_started
-      frontend:
-        condition: service_started
-      langgraph:
-        condition: service_started
+      - gateway
+      - frontend
+      - langgraph
     networks:
       - deer-flow
     restart: unless-stopped
@@ -36,7 +32,6 @@ services:
       target: prod
       args:
         PNPM_STORE_PATH: /root/.local/share/pnpm/store
-    container_name: deer-flow-frontend
     environment:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-defaultsecret123456789012345678901234567890}
       - BETTER_AUTH_BASE_URL=${BETTER_AUTH_BASE_URL:-http://localhost:2026}
@@ -49,7 +44,6 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile.production
-    container_name: deer-flow-gateway
     command: sh -c "cd backend && uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 --workers 2"
     working_dir: /app
     environment:
@@ -63,7 +57,7 @@ services:
       - deer-flow
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
       interval: 30s
       timeout: 10s
       retries: 10
@@ -74,7 +68,6 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile.production
-    container_name: deer-flow-langgraph
     command: sh -c "cd /app/backend && uv run langgraph dev --no-browser --allow-blocking --no-reload --host 0.0.0.0 --port 2024"
     environment:
       - CI=true
