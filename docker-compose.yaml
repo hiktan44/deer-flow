@@ -49,6 +49,7 @@ services:
       - JINA_API_KEY=${JINA_API_KEY:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - DATABASE_URL=${DATABASE_URL}
+      - VERCEL_API_KEY=${VERCEL_API_KEY:-}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
@@ -74,4 +75,5 @@ services:
       - JINA_API_KEY=${JINA_API_KEY:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - DATABASE_URL=${DATABASE_URL}
+      - VERCEL_API_KEY=${VERCEL_API_KEY:-}
     restart: unless-stopped
