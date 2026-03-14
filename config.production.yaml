@@ -90,5 +90,5 @@ memory:
   max_injection_tokens: 2000
 
 checkpointer:
-  type: sqlite
-  connection_string: checkpoints.db
+  type: postgres
+  connection_string: $DATABASE_URL
