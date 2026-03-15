@@ -1,7 +1,7 @@
 # DeerFlow — Coolify Production Deployment
 # ⚠️ container_name YOK — Coolify kendi adlandırma kuralını uyguluyor
-# ⚠️ Volume mount YOK — config dosyaları Dockerfile'a COPY ediliyor
 # ⚠️ Custom network YOK — Coolify kendi network yönetimini kullanıyor
+# ✅ Volume mount VAR — veri kalıcılığı için (deploy sonrası veriler korunur)
 
 services:
   # ── Reverse Proxy ──────────────────────────────────────────────────────────
@@ -51,6 +51,9 @@ services:
       - DATABASE_URL=${DATABASE_URL:-}
       - VERCEL_API_KEY=${VERCEL_API_KEY:-}
     restart: unless-stopped
+    volumes:
+      - deerflow_data:/app/backend/.deer-flow
+      - deerflow_outputs:/mnt/user-data
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
       interval: 30s
@@ -77,3 +80,12 @@ services:
       - DATABASE_URL=${DATABASE_URL:-}
       - VERCEL_API_KEY=${VERCEL_API_KEY:-}
     restart: unless-stopped
+    volumes:
+      - deerflow_data:/app/backend/.deer-flow
+      - deerflow_outputs:/mnt/user-data
+
+volumes:
+  deerflow_data:
+    driver: local
+  deerflow_outputs:
+    driver: local

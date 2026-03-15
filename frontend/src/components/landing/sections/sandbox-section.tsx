@@ -12,20 +12,20 @@ export function SandboxSection({ className }: { className?: string }) {
   return (
     <Section
       className={className}
-      title="Agent Runtime Environment"
+      title="Ajan Çalışma Ortamı"
       subtitle={
         <p>
-          We give DeerFlow a &quot;computer&quot;, which can execute commands,
-          manage files, and run long tasks — all in a secure Docker-based
-          sandbox
+          DeerFlow&apos;a bir &quot;bilgisayar&quot; verdik — komut çalıştırır,
+          dosyaları yönetir ve uzun süren görevleri yürütür — hepsi güvenli
+          Docker tabanlı bir sandbox içinde
         </p>
       }
     >
       <div className="mt-8 flex w-full max-w-6xl flex-col items-center gap-12 lg:flex-row lg:gap-16">
-        {/* Left: Terminal */}
+        {/* Sol: Terminal */}
         <div className="w-full flex-1">
           <Terminal className="h-[360px] w-full">
-            {/* Scene 1: Build a Game */}
+            {/* Sahne 1: Oyun Geliştirme */}
             <TypingAnimation>$ cat requirements.txt</TypingAnimation>
             <AnimatedSpan delay={800} className="text-zinc-400">
               pygame==2.5.0
@@ -35,44 +35,44 @@ export function SandboxSection({ className }: { className?: string }) {
               $ pip install -r requirements.txt
             </TypingAnimation>
             <AnimatedSpan delay={2000} className="text-green-500">
-              ✔ Installed pygame
+              ✔ pygame yüklendi
             </AnimatedSpan>
 
             <TypingAnimation delay={2400}>
               $ write game.py --lines 156
             </TypingAnimation>
             <AnimatedSpan delay={3200} className="text-blue-500">
-              ✔ Written 156 lines
+              ✔ 156 satır yazıldı
             </AnimatedSpan>
 
             <TypingAnimation delay={3600}>
               $ python game.py --test
             </TypingAnimation>
             <AnimatedSpan delay={4200} className="text-green-500">
-              ✔ All sprites loaded
+              ✔ Tüm görseller yüklendi
             </AnimatedSpan>
             <AnimatedSpan delay={4500} className="text-green-500">
-              ✔ Physics engine OK
+              ✔ Fizik motoru tamam
             </AnimatedSpan>
             <AnimatedSpan delay={4800} className="text-green-500">
-              ✔ 60 FPS stable
+              ✔ 60 FPS kararlı
             </AnimatedSpan>
 
-            {/* Scene 2: Data Analysis */}
+            {/* Sahne 2: Veri Analizi */}
             <TypingAnimation delay={5400}>
-              $ curl -O sales-2024.csv
+              $ curl -O satis-2024.csv
             </TypingAnimation>
             <AnimatedSpan delay={6200} className="text-zinc-400">
-              Downloaded 12.4 MB
+              12.4 MB indirildi
             </AnimatedSpan>
           </Terminal>
         </div>
 
-        {/* Right: Description */}
+        {/* Sağ: Açıklama */}
         <div className="w-full flex-1 space-y-6">
           <div className="space-y-4">
             <p className="text-sm font-medium tracking-wider text-purple-400 uppercase">
-              Open-source
+              Açık Kaynak
             </p>
             <h2 className="text-4xl font-bold tracking-tight lg:text-5xl">
               <a
@@ -87,36 +87,36 @@ export function SandboxSection({ className }: { className?: string }) {
 
           <div className="space-y-4 text-lg text-zinc-400">
             <p>
-              We recommend using{" "}
+              Tarayıcı, Kabuk, Dosya, MCP ve VSCode Sunucusunu tek bir Docker
+              container&apos;ında birleştiren{" "}
               <a
                 href="https://github.com/agent-infra/sandbox"
                 className="underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                All-in-One Sandbox
+                Hepsi Bir Arada Sandbox
               </a>{" "}
-              that combines Browser, Shell, File, MCP and VSCode Server in a
-              single Docker container.
+              kullanılmasını öneriyoruz.
             </p>
           </div>
 
-          {/* Feature Tags */}
+          {/* Özellik Etiketleri */}
           <div className="flex flex-wrap gap-3 pt-4">
             <span className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
-              Isolated
+              İzole
             </span>
             <span className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
-              Safe
+              Güvenli
             </span>
             <span className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
-              Persistent
+              Kalıcı
             </span>
             <span className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
-              Mountable FS
+              Bağlanabilir DS
             </span>
             <span className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
-              Long-running
+              Uzun Süreli
             </span>
           </div>
         </div>

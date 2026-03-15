@@ -1,67 +1,80 @@
 /**
- * About DeerFlow markdown content. Inlined to avoid raw-loader dependency
- * (Turbopack cannot resolve raw-loader for .md imports).
+ * DeerFlow hakkında markdown içeriği. Raw-loader bağımlılığını önlemek
+ * için satır içi yazılmıştır (Turbopack, .md importları için raw-loader çözemez).
  */
-export const aboutMarkdown = `# 🦌 [About DeerFlow 2.0](https://github.com/bytedance/deer-flow)
+export const aboutMarkdown = `# 🦌 [DeerFlow 2.0 Hakkında](https://github.com/bytedance/deer-flow)
 
-> **From Open Source, Back to Open Source**
+> **Açık Kaynaktan Doğdu, Açık Kaynağa Geri Verir**
 
-DeerFlow (**D**eep **E**xploration and **E**fficient **R**esearch **Flow**) is an open-source **super agent harness** that orchestrates **sub-agents**, **memory**, and **sandboxes** to do almost anything — powered by **extensible skills**.
-
----
-
-## 🚀 Core Features
-
-* **Skills & Tools**: With built-in and extensible skills and tools, DeerFlow can do almost anything.
-* **Sub-Agents**: Sub-Agents help the main agent to do the tasks that are too complex to be done by the main agent.
-* **Sandbox & File System**: Safely execute code and manipulate files in the sandbox.
-* **Context Engineering**: Isolated sub-agent context, summarization to keep the context window sharp.
-* **Long-Term Memory**: Keep recording the user's profile, top of mind, and conversation history.
+DeerFlow (**D**eep **E**xploration and **E**fficient **R**esearch **Flow**), hemen hemen her şeyi yapabilmek için **alt ajanları**, **belleği** ve **sandbox'ları** düzenleyen açık kaynaklı bir **süper ajan** altyapısıdır — **genişletilebilir yetenekler** ile güçlendirilmiştir.
 
 ---
 
-## 🌟 GitHub Repository
+## 🏢 Thirdhand Tarafından Düzenlenmiştir
 
-![Star History Chart](https://api.star-history.com/svg?repos=bytedance/deer-flow&type=Date)
+Bu uygulama **[Thirdhand](https://www.thirdhand.com.tr)** tarafından açık kaynaklı MIT lisanslı proje üzerinden düzenlenerek oluşturulmuştur.
 
-Explore DeerFlow on GitHub: [github.com/bytedance/deer-flow](https://github.com/bytedance/deer-flow)
-
-## 🌐 Official Website
-
-Visit the official website of DeerFlow: [deerflow.tech](https://deerflow.tech/)
-
-## 📧 Support
-
-If you have any questions or need help, please contact us at [support@deerflow.tech](mailto:support@deerflow.tech).
+🌐 **Web sitesi**: [www.thirdhand.com.tr](https://www.thirdhand.com.tr)
 
 ---
 
-## 📜 License
+## 🚀 Temel Özellikler
 
-DeerFlow is proudly open source and distributed under the **MIT License**.
+* **Yetenekler & Araçlar**: Yerleşik ve genişletilebilir yetenekler ve araçlar sayesinde DeerFlow hemen hemen her şeyi yapabilir.
+* **Alt Ajanlar**: Alt ajanlar, ana ajanın tek başına yapamayacağı kadar karmaşık görevlerde yardımcı olur.
+* **Sandbox & Dosya Sistemi**: Sandbox içinde güvenle kod çalıştırın ve dosyaları yönetin.
+* **Bağlam Mühendisliği**: İzole alt ajan bağlamı, bağlam penceresini keskin tutmak için özetleme.
+* **Uzun Süreli Bellek**: Kullanıcı profilini, gündem konularını ve konuşma geçmişini sürekli kayıt altında tutar.
 
 ---
 
-## 🙌 Acknowledgments
+## 🌟 GitHub Deposu
 
-We extend our heartfelt gratitude to the open source projects and contributors who have made DeerFlow a reality. We truly stand on the shoulders of giants.
+![Star Geçmişi Grafiği](https://api.star-history.com/svg?repos=bytedance/deer-flow&type=Date)
 
-### Core Frameworks
-- **[LangChain](https://github.com/langchain-ai/langchain)**: A phenomenal framework that powers our LLM interactions and chains.
-- **[LangGraph](https://github.com/langchain-ai/langgraph)**: Enabling sophisticated multi-agent orchestration.
-- **[Next.js](https://nextjs.org/)**: A cutting-edge framework for building web applications.
+DeerFlow'u GitHub'da keşfedin: [github.com/bytedance/deer-flow](https://github.com/bytedance/deer-flow)
 
-### UI Libraries
-- **[Shadcn](https://ui.shadcn.com/)**: Minimalistic components that power our UI.
-- **[SToneX](https://github.com/stonexer)**: For his invaluable contribution to token-by-token visual effects.
+## 🌐 Resmi Web Sitesi
 
-These outstanding projects form the backbone of DeerFlow and exemplify the transformative power of open source collaboration.
+DeerFlow'un resmi web sitesini ziyaret edin: [deerflow.tech](https://deerflow.tech/)
 
-### Special Thanks
-Finally, we want to express our heartfelt gratitude to the core authors of DeerFlow 1.0 and 2.0:
+## 📧 Destek
+
+Sorularınız veya yardıma ihtiyacınız varsa, lütfen bize ulaşın: [support@deerflow.tech](mailto:support@deerflow.tech)
+
+---
+
+## 📜 Lisans
+
+DeerFlow, gururla açık kaynak olup **MIT Lisansı** altında dağıtılmaktadır.
+
+---
+
+## 🙌 Teşekkürler
+
+DeerFlow'u gerçeğe dönüştüren açık kaynak projelerine ve katkıda bulunanlara içten teşekkürlerimizi sunuyoruz. Gerçekten devlerin omuzları üzerinde duruyoruz.
+
+### Temel Çatılar
+- **[LangChain](https://github.com/langchain-ai/langchain)**: LLM etkileşimlerimizi ve zincirlerimizi güçlendiren olağanüstü bir çatı.
+- **[LangGraph](https://github.com/langchain-ai/langgraph)**: Gelişmiş çok ajanlı düzenlemeyi mümkün kılan yapı.
+- **[Next.js](https://nextjs.org/)**: Web uygulamaları geliştirmek için son teknoloji çatı.
+
+### UI Kütüphaneleri
+- **[Shadcn](https://ui.shadcn.com/)**: Arayüzümüzü güçlendiren minimalist bileşenler.
+- **[SToneX](https://github.com/stonexer)**: Token token görsel efektlere değerli katkısı için.
+
+Bu olağanüstü projeler DeerFlow'un temelini oluşturmakta ve açık kaynak işbirliğinin dönüştürücü gücünü örneklemektedir.
+
+### Özel Teşekkürler
+Son olarak, DeerFlow 1.0 ve 2.0'ın çekirdek yazarlarına içten teşekkürlerimizi ifade etmek istiyoruz:
 
 - **[Daniel Walnut](https://github.com/hetaoBackend/)**
 - **[Henry Li](https://github.com/magiccube/)**
 
-Without their vision, passion and dedication, \`DeerFlow\` would not be what it is today.
+Onların vizyonu, tutkusu ve özverisi olmasaydı, \`DeerFlow\` bugün olduğu gibi olmazdı.
+
+---
+
+### 🔧 Düzenleyen
+Bu sürüm **[Thirdhand](https://www.thirdhand.com.tr)** tarafından Türkiye pazarı için özelleştirilerek düzenlenmiştir.
 `;

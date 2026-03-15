@@ -13,16 +13,16 @@ export function CommunitySection() {
     <Section
       title={
         <AuroraText colors={["#60A5FA", "#A5FA60", "#A560FA"]}>
-          Join the Community
+          Topluluğa Katıl
         </AuroraText>
       }
-      subtitle="Contribute brilliant ideas to shape the future of DeerFlow. Collaborate, innovate, and make impacts."
+      subtitle="DeerFlow'un geleceğini şekillendirmek için harika fikirlerle katkıda bulunun. İşbirliği yapın, yenilik getirin ve etki yaratın."
     >
       <div className="flex justify-center">
         <Button className="text-xl" size="lg" asChild>
           <Link href="https://github.com/bytedance/deer-flow" target="_blank">
             <GitHubLogoIcon />
-            Contribute Now
+            Şimdi Katkıda Bulun
           </Link>
         </Button>
       </div>

@@ -9,14 +9,14 @@ export function SkillsSection({ className }: { className?: string }) {
   return (
     <Section
       className={cn("h-[calc(100vh-64px)] w-full bg-white/2", className)}
-      title="Agent Skills"
+      title="Ajan Yetenekleri"
       subtitle={
         <div>
-          Agent Skills are loaded progressively — only what&apos;s needed, when
-          it&apos;s needed.
+          Ajan yetenekleri kademeli olarak yüklenir — yalnızca ihtiyaç
+          duyulduğunda, ihtiyaç duyulduğu kadar.
           <br />
-          Extend DeerFlow with your own skill files, or use our built-in
-          library.
+          DeerFlow&apos;u kendi yetenek dosyalarınızla genişletin veya yerleşik
+          kütüphanemizi kullanın.
         </div>
       }
     >

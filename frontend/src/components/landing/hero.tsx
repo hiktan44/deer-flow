@@ -39,38 +39,36 @@ export function Hero({ className }: { className?: string }) {
         <h1 className="flex items-center gap-2 text-4xl font-bold md:text-6xl">
           <WordRotate
             words={[
-              "Deep Research",
-              "Collect Data",
-              "Analyze Data",
-              "Generate Webpages",
-              "Vibe Coding",
-              "Generate Slides",
-              "Generate Images",
-              "Generate Podcasts",
-              "Generate Videos",
-              "Generate Songs",
-              "Organize Emails",
-              "Do Anything",
-              "Learn Anything",
+              "Derinlemesine Araştır",
+              "Veri Topla",
+              "Veri Analiz Et",
+              "Web Sayfası Oluştur",
+              "Kod Geliştir",
+              "Sunum Oluştur",
+              "Görsel Üret",
+              "Podcast Oluştur",
+              "Video Üret",
+              "Şarkı Üret",
+              "E-posta Düzenle",
+              "Her Şeyi Yap",
+              "Her Şeyi Öğren",
             ]}
           />{" "}
-          <div>with DeerFlow</div>
+          <div>DeerFlow ile</div>
         </h1>
         <p
           className="mt-8 scale-105 text-center text-2xl text-shadow-sm"
           style={{ color: "rgb(184,184,192)" }}
         >
-          An open-source SuperAgent harness that researches, codes, and creates.
-          With
+          Araştıran, kodlayan ve üreten açık kaynaklı bir Süper Ajan.
           <br />
-          the help of sandboxes, memories, tools, skills and subagents, it
-          handles
+          Sandbox, bellek, araçlar, yetenekler ve alt ajanlar sayesinde
           <br />
-          different levels of tasks that could take minutes to hours.
+          dakikalar ile saatler arası süren görevleri üstlenir.
         </p>
         <Link href="/workspace">
           <Button className="size-lg mt-8 scale-108" size="lg">
-            <span className="text-md">Get Started with 2.0</span>
+            <span className="text-md">2.0 ile Başla</span>
             <ChevronRightIcon className="size-4" />
           </Button>
         </Link>

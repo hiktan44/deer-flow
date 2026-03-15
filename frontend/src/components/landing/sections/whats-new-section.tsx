@@ -9,42 +9,42 @@ const COLOR = "#0a0a0a";
 const features: BentoCardProps[] = [
   {
     color: COLOR,
-    label: "Context Engineering",
-    title: "Long/Short-term Memory",
-    description: "Now the agent can better understand you",
+    label: "Bağlam Mühendisliği",
+    title: "Uzun/Kısa Süreli Bellek",
+    description: "Artık ajan sizi daha iyi anlayabilir",
   },
   {
     color: COLOR,
-    label: "Long Task Running",
-    title: "Planning and Sub-tasking",
+    label: "Uzun Süreli Görev Çalıştırma",
+    title: "Planlama ve Alt Görevler",
     description:
-      "Plans ahead, reasons through complexity, then executes sequentially or in parallel",
+      "Önceden plan yapar, karmaşıklık üzerinde düşünür, ardından sıralı veya paralel çalıştırır",
   },
   {
     color: COLOR,
-    label: "Extensible",
-    title: "Skills and Tools",
+    label: "Genişletilebilir",
+    title: "Yetenekler ve Araçlar",
     description:
-      "Plug, play, or even swap built-in tools. Build the agent you want.",
+      "Tak, çalıştır veya yerleşik araçları değiştir. İstediğiniz ajanı oluşturun.",
   },
 
   {
     color: COLOR,
-    label: "Persistent",
-    title: "Sandbox with File System",
-    description: "Read, write, run — like a real computer",
+    label: "Kalıcı",
+    title: "Dosya Sistemli Sandbox",
+    description: "Oku, yaz, çalıştır — gerçek bir bilgisayar gibi",
   },
   {
     color: COLOR,
-    label: "Flexible",
-    title: "Multi-Model Support",
-    description: "Doubao, DeepSeek, OpenAI, Gemini, etc.",
+    label: "Esnek",
+    title: "Çoklu Model Desteği",
+    description: "Doubao, DeepSeek, OpenAI, Gemini ve daha fazlası",
   },
   {
     color: COLOR,
-    label: "Free",
-    title: "Open Source",
-    description: "MIT License, self-hosted, full control",
+    label: "Ücretsiz",
+    title: "Açık Kaynak",
+    description: "MIT Lisansı, kendi sunucunuzda barındırın, tam kontrol",
   },
 ];
 
@@ -52,8 +52,8 @@ export function WhatsNewSection({ className }: { className?: string }) {
   return (
     <Section
       className={cn("", className)}
-      title="Whats New in DeerFlow 2.0"
-      subtitle="DeerFlow is now evolving from a Deep Research agent into a full-stack Super Agent"
+      title="DeerFlow 2.0'daki Yenilikler"
+      subtitle="DeerFlow artık bir Derin Araştırma ajanından tam donanımlı bir Süper Ajana dönüşüyor"
     >
       <div className="flex w-full items-center justify-center">
         <MagicBento data={features} />
