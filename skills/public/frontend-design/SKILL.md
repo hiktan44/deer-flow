@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
+description: Yüksek tasarım kalitesinde, üretim seviyesinde frontend arayüzleri oluştur. Kullanıcı web bileşenleri, sayfalar, üretimler, posterler veya uygulamalar oluşturmak istediğinde kullanılır (web siteleri, açılış sayfaları, panolar, React bileşenleri, HTML/CSS düzenleri veya herhangi bir web arayüzünü stillendirme/güzelleştirme dahil). Jenerik AI estetiğinden kaçınan yaratıcı, cilalı kod ve UI tasarımı üretir.
 license: Complete terms in LICENSE.txt
 ---
 

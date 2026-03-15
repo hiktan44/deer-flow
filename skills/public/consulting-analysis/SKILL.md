@@ -1,6 +1,6 @@
 ---
 name: consulting-analysis
-description: Use this skill when the user requests to generate, create, or write professional research reports including but not limited to market analysis, consumer insights, brand analysis, financial analysis, industry research, competitive intelligence, investment due diligence, or any consulting-grade analytical report. This skill operates in two phases — (1) generating a structured analysis framework with chapter skeleton, data query requirements, and analysis logic, and (2) after data collection by other skills, producing the final consulting-grade report with structured narratives, embedded charts, and strategic insights.
+description: Kullanıcı pazar analizi, tüketici içgörüleri, marka analizi, finansal analiz, sektör araştırması, rekabet istihbaratı, yatırım durum tespiti veya profesyonel danışmanlık düzeyinde analitik rapor oluşturmak istediğinde bu yetenek kullanılır. İki aşamada çalışır — (1) bölüm iskeleti, veri sorgusu gereksinimleri ve analiz mantığı ile yapılandırılmış analiz çerçevesi oluşturma, (2) veri toplama sonrası yapılandırılmış anlatım, gömülü grafikler ve stratejik içgörülerle nihai danışmanlık raporu üretme.
 ---
 
 # Professional Research Report Skill

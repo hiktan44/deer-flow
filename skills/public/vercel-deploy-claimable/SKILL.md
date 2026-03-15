@@ -1,6 +1,6 @@
 ---
 name: vercel-deploy
-description: Deploy applications and websites to Vercel. Use this skill when the user requests deployment actions such as "Deploy my app", "Deploy this to production", "Create a preview deployment", "Deploy and give me the link", or "Push this live". No authentication required - returns preview URL and claimable deployment link.
+description: Uygulamaları ve web sitelerini Vercel'e deploy et. Kullanıcı "Uygulamımı deploy et", "Bunu production'a deploy et", "Önizleme deploy'u oluştur", "Deploy et ve bana linki ver" veya "Bunu canlıya al" gibi deployment işlemleri talep ettiğinde kullanılır. Kimlik doğrulama gerektirmez — önizleme URL'si ve sahiplenebilir deployment linki döndürür.
 metadata:
   author: vercel
   version: "1.0.0"

@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# Types
 class ScriptLine:
     def __init__(self, speaker: Literal["male", "female"] = "male", paragraph: str = ""):
         self.speaker = speaker
@@ -21,13 +20,13 @@ class ScriptLine:
 
 
 class Script:
-    def __init__(self, locale: Literal["en", "zh"] = "en", lines: Optional[list[ScriptLine]] = None):
+    def __init__(self, locale: str = "tr", lines: Optional[list[ScriptLine]] = None):
         self.locale = locale
         self.lines = lines or []
 
     @classmethod
     def from_dict(cls, data: dict) -> "Script":
-        script = cls(locale=data.get("locale", "en"))
+        script = cls(locale=data.get("locale", "tr"))
         for line in data.get("lines", []):
             script.lines.append(
                 ScriptLine(
@@ -38,79 +37,71 @@ class Script:
         return script
 
 
-def text_to_speech(text: str, voice_type: str) -> Optional[bytes]:
-    """Convert text to speech using Volcengine TTS."""
-    app_id = os.getenv("VOLCENGINE_TTS_APPID")
-    access_token = os.getenv("VOLCENGINE_TTS_ACCESS_TOKEN")
-    cluster = os.getenv("VOLCENGINE_TTS_CLUSTER", "volcano_tts")
+def text_to_speech_gemini(text: str, voice_name: str, locale: str = "tr") -> Optional[bytes]:
+    """Gemini API ile Text-to-Speech — Türkçe dahil çoklu dil desteği."""
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY environment variable gerekli")
 
-    if not app_id or not access_token:
-        raise ValueError(
-            "VOLCENGINE_TTS_APPID and VOLCENGINE_TTS_ACCESS_TOKEN environment variables must be set"
-        )
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
-    url = "https://openspeech.bytedance.com/api/v1/tts"
+    # Gemini ile ses sentezi — doğal konuşma stili
+    prompt = f"""Sen bir podcast sunucususun. Aşağıdaki metni doğal bir konuşma tonuyla oku.
+Dil: {'Türkçe' if locale == 'tr' else locale}
+Ses: {'Erkek sunucu, güçlü ve güvenilir ton' if 'male' in voice_name else 'Kadın sunucu, sıcak ve samimi ton'}
 
-    # Authentication: Bearer token with semicolon separator
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer;{access_token}",
-    }
+Metin:
+{text}"""
 
     payload = {
-        "app": {
-            "appid": app_id,
-            "token": "access_token",  # literal string, not the actual token
-            "cluster": cluster,
-        },
-        "user": {"uid": "podcast-generator"},
-        "audio": {
-            "voice_type": voice_type,
-            "encoding": "mp3",
-            "speed_ratio": 1.2,
-        },
-        "request": {
-            "reqid": str(uuid.uuid4()),  # must be unique UUID
-            "text": text,
-            "text_type": "plain",
-            "operation": "query",
-        },
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "response_modalities": ["AUDIO"],
+            "speech_config": {
+                "voiceConfig": {
+                    "prebuiltVoiceConfig": {
+                        "voiceName": voice_name
+                    }
+                }
+            }
+        }
     }
 
     try:
-        response = requests.post(url, json=payload, headers=headers)
-
+        response = requests.post(url, json=payload, timeout=60)
         if response.status_code != 200:
-            logger.error(f"TTS API error: {response.status_code} - {response.text}")
+            logger.error(f"Gemini TTS error: {response.status_code} - {response.text[:200]}")
             return None
 
         result = response.json()
-        if result.get("code") != 3000:
-            logger.error(f"TTS error: {result.get('message')} (code: {result.get('code')})")
-            return None
+        candidates = result.get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            for part in parts:
+                inline_data = part.get("inlineData", {})
+                if inline_data.get("mimeType", "").startswith("audio/"):
+                    return base64.b64decode(inline_data["data"])
 
-        audio_data = result.get("data")
-        if audio_data:
-            return base64.b64decode(audio_data)
+        logger.error("Gemini TTS: audio data bulunamadı")
+        return None
 
     except Exception as e:
-        logger.error(f"TTS error: {str(e)}")
+        logger.error(f"Gemini TTS error: {str(e)}")
+        return None
 
-    return None
 
+def _process_line(args: tuple[int, ScriptLine, int, str]) -> tuple[int, Optional[bytes]]:
+    """Tek bir script satırını ses'e çevir."""
+    i, line, total, locale = args
 
-def _process_line(args: tuple[int, ScriptLine, int]) -> tuple[int, Optional[bytes]]:
-    """Process a single script line for TTS. Returns (index, audio_bytes)."""
-    i, line, total = args
-
-    # Select voice based on speaker gender
+    # Gemini sesler — erkek/kadın
     if line.speaker == "male":
-        voice_type = "zh_male_yangguangqingnian_moon_bigtts"  # Male voice
+        voice_name = "Kore"  # Erkek ses
     else:
-        voice_type = "zh_female_sajiaonvyou_moon_bigtts"  # Female voice
+        voice_name = "Zara"  # Kadın ses
 
-    logger.info(f"Processing line {i + 1}/{total} ({line.speaker})")
-    audio = text_to_speech(line.paragraph, voice_type)
+    logger.info(f"Processing line {i + 1}/{total} ({line.speaker}: {voice_name})")
+    audio = text_to_speech_gemini(line.paragraph, voice_name, locale)
 
     if not audio:
         logger.warning(f"Failed to generate audio for line {i + 1}")
@@ -118,14 +109,13 @@ def _process_line(args: tuple[int, ScriptLine, int]) -> tuple[int, Optional[byte
     return (i, audio)
 
 
-def tts_node(script: Script, max_workers: int = 4) -> list[bytes]:
-    """Convert script lines to audio chunks using TTS with multi-threading."""
+def tts_node(script: Script, max_workers: int = 2) -> list[bytes]:
+    """Script satırlarını paralel ses dosyasına çevir."""
     logger.info(f"Converting script to audio using {max_workers} workers...")
 
     total = len(script.lines)
-    tasks = [(i, line, total) for i, line in enumerate(script.lines)]
+    tasks = [(i, line, total, script.locale) for i, line in enumerate(script.lines)]
 
-    # Use ThreadPoolExecutor for parallel TTS generation
     results: dict[int, Optional[bytes]] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(_process_line, task): task[0] for task in tasks}
@@ -133,7 +123,6 @@ def tts_node(script: Script, max_workers: int = 4) -> list[bytes]:
             idx, audio = future.result()
             results[idx] = audio
 
-    # Collect results in order, skipping failed ones
     audio_chunks = []
     for i in range(total):
         audio = results.get(i)
@@ -145,7 +134,7 @@ def tts_node(script: Script, max_workers: int = 4) -> list[bytes]:
 
 
 def mix_audio(audio_chunks: list[bytes]) -> bytes:
-    """Combine audio chunks into a single audio file."""
+    """Ses parçalarını birleştir."""
     logger.info("Mixing audio chunks...")
     output = b"".join(audio_chunks)
     logger.info("Audio mixing complete")
@@ -153,14 +142,12 @@ def mix_audio(audio_chunks: list[bytes]) -> bytes:
 
 
 def generate_markdown(script: Script, title: str = "Podcast Script") -> str:
-    """Generate a markdown script from the podcast script."""
+    """Podcast transcript markdown oluştur."""
     lines = [f"# {title}", ""]
-
     for line in script.lines:
-        speaker_name = "**Host (Male)**" if line.speaker == "male" else "**Host (Female)**"
+        speaker_name = "**Sunucu (Erkek)**" if line.speaker == "male" else "**Sunucu (Kadın)**"
         lines.append(f"{speaker_name}: {line.paragraph}")
         lines.append("")
-
     return "\n".join(lines)
 
 
@@ -169,19 +156,16 @@ def generate_podcast(
     output_file: str,
     transcript_file: Optional[str] = None,
 ) -> str:
-    """Generate a podcast from a script JSON file."""
-
-    # Read script JSON
+    """Script JSON dosyasından podcast oluştur."""
     with open(script_file, "r", encoding="utf-8") as f:
         script_json = json.load(f)
 
     if "lines" not in script_json:
-        raise ValueError(f"Invalid script format: missing 'lines' key. Got keys: {list(script_json.keys())}")
+        raise ValueError(f"Geçersiz script formatı: 'lines' key eksik. Mevcut keys: {list(script_json.keys())}")
 
     script = Script.from_dict(script_json)
     logger.info(f"Loaded script with {len(script.lines)} lines")
 
-    # Generate transcript markdown if requested
     if transcript_file:
         title = script_json.get("title", "Podcast Script")
         markdown_content = generate_markdown(script, title)
@@ -192,56 +176,37 @@ def generate_podcast(
             f.write(markdown_content)
         logger.info(f"Generated transcript to {transcript_file}")
 
-    # Convert to audio
     audio_chunks = tts_node(script)
 
     if not audio_chunks:
-        raise Exception("Failed to generate any audio")
+        raise Exception("Ses oluşturulamadı — API key'i ve model erişimini kontrol edin")
 
-    # Mix audio
     output_audio = mix_audio(audio_chunks)
 
-    # Save output
     output_dir = os.path.dirname(output_file)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     with open(output_file, "wb") as f:
         f.write(output_audio)
 
-    result = f"Successfully generated podcast to {output_file}"
+    result = f"Podcast başarıyla oluşturuldu: {output_file}"
     if transcript_file:
-        result += f" and transcript to {transcript_file}"
+        result += f" ve transcript: {transcript_file}"
     return result
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate podcast from script JSON file")
-    parser.add_argument(
-        "--script-file",
-        required=True,
-        help="Absolute path to script JSON file",
-    )
-    parser.add_argument(
-        "--output-file",
-        required=True,
-        help="Output path for generated podcast MP3",
-    )
-    parser.add_argument(
-        "--transcript-file",
-        required=False,
-        help="Output path for transcript markdown file (optional)",
-    )
+    parser = argparse.ArgumentParser(description="Generate podcast from script JSON (Gemini TTS)")
+    parser.add_argument("--script-file", required=True, help="Script JSON dosyası yolu")
+    parser.add_argument("--output-file", required=True, help="Çıktı podcast MP3/WAV yolu")
+    parser.add_argument("--transcript-file", required=False, help="Transcript markdown yolu (opsiyonel)")
 
     args = parser.parse_args()
 
     try:
-        result = generate_podcast(
-            args.script_file,
-            args.output_file,
-            args.transcript_file,
-        )
+        result = generate_podcast(args.script_file, args.output_file, args.transcript_file)
         print(result)
     except Exception as e:
         import traceback
-        print(f"Error generating podcast: {e}")
+        print(f"Podcast oluşturma hatası: {e}")
         traceback.print_exc()

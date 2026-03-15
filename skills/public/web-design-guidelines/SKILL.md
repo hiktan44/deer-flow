@@ -1,6 +1,6 @@
 ---
 name: web-design-guidelines
-description: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices".
+description: UI kodunu Web Arayüz Kılavuzları uyumluluğu açısından incele. "UI'ımı incele", "erişilebilirliği kontrol et", "tasarım denetimi yap", "UX'i incele" veya "sitemi en iyi uygulamalara göre kontrol et" denildiğinde kullanılır.
 metadata:
   author: vercel
   version: "1.0.0"

@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from src.config.extensions_config import ExtensionsConfig, SkillStateConfig, get_extensions_config, reload_extensions_config
 from src.gateway.path_utils import resolve_thread_virtual_path
 from src.skills import Skill, load_skills
-from src.skills.loader import get_skills_root_path
+from src.skills.loader import get_skills_root_path, reload_skills
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["skills"])
@@ -309,6 +309,9 @@ async def update_skill(skill_name: str, request: SkillUpdateRequest) -> SkillRes
         # Reload the extensions config to update the global cache
         reload_extensions_config()
 
+        # Invalidate skills cache so next load picks up the change
+        reload_skills()
+
         # Reload the skills to get the updated status (for API response)
         skills = load_skills(enabled_only=False)
         updated_skill = next((s for s in skills if s.name == skill_name), None)
@@ -433,6 +436,10 @@ async def install_skill(request: SkillInstallRequest) -> SkillInstallResponse:
             shutil.copytree(skill_dir, target_dir)
 
         logger.info(f"Skill '{skill_name}' installed successfully to {target_dir}")
+
+        # Invalidate skills cache so the new skill appears immediately
+        reload_skills()
+
         return SkillInstallResponse(success=True, skill_name=skill_name, message=f"Skill '{skill_name}' installed successfully")
 
     except HTTPException:

@@ -6,6 +6,7 @@ import { useI18nContext } from "./context";
 import { getLocaleFromCookie, setLocaleInCookie } from "./cookies";
 import { enUS } from "./locales/en-US";
 import { zhCN } from "./locales/zh-CN";
+import { trTR } from "./locales/tr-TR";
 
 import {
   DEFAULT_LOCALE,
@@ -18,6 +19,7 @@ import {
 const translations: Record<Locale, Translations> = {
   "en-US": enUS,
   "zh-CN": zhCN,
+  "tr-TR": trTR,
 };
 
 export function useI18n() {

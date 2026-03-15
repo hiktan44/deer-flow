@@ -1,6 +1,6 @@
 ---
 name: ppt-generation
-description: Use this skill when the user requests to generate, create, or make presentations (PPT/PPTX). Creates visually rich slides by generating images for each slide and composing them into a PowerPoint file.
+description: Kullanıcı sunum (PPT/PPTX) oluşturmak, yaratmak veya hazırlamak istediğinde bu yetenek kullanılır. Her slayt için görsel üreterek ve bunları bir PowerPoint dosyasında birleştirerek görsel açıdan zengin slaytlar oluşturur.
 ---
 
 # PPT Generation Skill

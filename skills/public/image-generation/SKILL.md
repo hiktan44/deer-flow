@@ -1,6 +1,6 @@
 ---
 name: image-generation
-description: Use this skill when the user requests to generate, create, imagine, or visualize images including characters, scenes, products, or any visual content. Supports structured prompts and reference images for guided generation.
+description: Kullanıcı karakter, sahne, ürün veya herhangi bir görsel içerik dahil olmak üzere görsel oluşturmak, yaratmak, hayal etmek veya görselleştirmek istediğinde bu yetenek kullanılır. Yönlendirilmiş üretim için yapılandırılmış promptlar ve referans görselleri destekler.
 ---
 
 # Image Generation Skill

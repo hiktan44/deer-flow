@@ -1,8 +1,14 @@
 import os
+import time
 from pathlib import Path
 
 from .parser import parse_skill_file
 from .types import Skill
+
+# In-memory skill cache
+_skills_cache: list[Skill] | None = None
+_skills_cache_time: float = 0
+_CACHE_TTL_SECONDS: float = 30  # Cache 30 saniye geçerli
 
 
 def get_skills_root_path() -> Path:
@@ -19,12 +25,23 @@ def get_skills_root_path() -> Path:
     return skills_dir
 
 
+def reload_skills() -> None:
+    """
+    Invalidate the skills cache. Next call to load_skills() will re-read from disk.
+    """
+    global _skills_cache, _skills_cache_time
+    _skills_cache = None
+    _skills_cache_time = 0
+
+
 def load_skills(skills_path: Path | None = None, use_config: bool = True, enabled_only: bool = False) -> list[Skill]:
     """
     Load all skills from the skills directory.
 
     Scans both public and custom skill directories, parsing SKILL.md files
     to extract metadata. The enabled state is determined by the skills_state_config.json file.
+
+    Uses an in-memory cache with TTL to avoid repeated disk I/O on every API call.
 
     Args:
         skills_path: Optional custom path to skills directory.
@@ -36,6 +53,18 @@ def load_skills(skills_path: Path | None = None, use_config: bool = True, enable
     Returns:
         List of Skill objects, sorted by name
     """
+    global _skills_cache, _skills_cache_time
+
+    # Use cache if available and not expired (only for default path)
+    if skills_path is None and _skills_cache is not None:
+        if (time.monotonic() - _skills_cache_time) < _CACHE_TTL_SECONDS:
+            skills = list(_skills_cache)  # shallow copy
+            # Re-apply extensions config for enabled status (lightweight)
+            _apply_enabled_status(skills)
+            if enabled_only:
+                skills = [skill for skill in skills if skill.enabled]
+            return skills
+
     if skills_path is None:
         if use_config:
             try:
@@ -73,11 +102,25 @@ def load_skills(skills_path: Path | None = None, use_config: bool = True, enable
             if skill:
                 skills.append(skill)
 
-    # Load skills state configuration and update enabled status
-    # NOTE: We use ExtensionsConfig.from_file() instead of get_extensions_config()
-    # to always read the latest configuration from disk. This ensures that changes
-    # made through the Gateway API (which runs in a separate process) are immediately
-    # reflected in the LangGraph Server when loading skills.
+    # Apply enabled status
+    _apply_enabled_status(skills)
+
+    # Sort by name for consistent ordering
+    skills.sort(key=lambda s: s.name)
+
+    # Update cache (only for default/config path)
+    _skills_cache = list(skills)  # shallow copy
+    _skills_cache_time = time.monotonic()
+
+    # Filter by enabled status if requested
+    if enabled_only:
+        skills = [skill for skill in skills if skill.enabled]
+
+    return skills
+
+
+def _apply_enabled_status(skills: list[Skill]) -> None:
+    """Apply enabled/disabled status from extensions config to skill list."""
     try:
         from src.config.extensions_config import ExtensionsConfig
 
@@ -87,12 +130,3 @@ def load_skills(skills_path: Path | None = None, use_config: bool = True, enable
     except Exception as e:
         # If config loading fails, default to all enabled
         print(f"Warning: Failed to load extensions config: {e}")
-
-    # Filter by enabled status if requested
-    if enabled_only:
-        skills = [skill for skill in skills if skill.enabled]
-
-    # Sort by name for consistent ordering
-    skills.sort(key=lambda s: s.name)
-
-    return skills

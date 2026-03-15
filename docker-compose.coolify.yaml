@@ -1,0 +1,109 @@
+# DeerFlow — Coolify Production Deployment
+# Coolify'da Docker Compose olarak deploy edilecek
+# Port: 2026 (Coolify'da reverse proxy ile domain eşlenecek)
+
+services:
+  # ── Reverse Proxy ──────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: deer-flow-nginx
+    ports:
+      - "${PORT:-2026}:2026"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      gateway:
+        condition: service_healthy
+      langgraph:
+        condition: service_started
+    networks:
+      - deer-flow
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:2026/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── Frontend: Next.js Production ───────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: prod
+      args:
+        PNPM_STORE_PATH: /root/.local/share/pnpm/store
+    container_name: deer-flow-frontend
+    environment:
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+    env_file:
+      - ./frontend/.env
+    networks:
+      - deer-flow
+    restart: unless-stopped
+
+  # ── Gateway API ────────────────────────────────────────────────────────────
+  gateway:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: deer-flow-gateway
+    command: sh -c "cd backend && uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 --workers 2"
+    volumes:
+      - ./config.yaml:/app/backend/config.yaml:ro
+      - ./extensions_config.json:/app/backend/extensions_config.json:ro
+      - ./skills:/app/skills:ro
+      - deer-flow-data:/app/backend/.deer-flow
+    working_dir: /app
+    environment:
+      - CI=true
+      - DEER_FLOW_HOME=/app/backend/.deer-flow
+    env_file:
+      - ./.env
+    networks:
+      - deer-flow
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ── LangGraph Server ───────────────────────────────────────────────────────
+  langgraph:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: deer-flow-langgraph
+    command: sh -c "cd /app/backend && uv run langgraph dev --no-browser --allow-blocking --no-reload --host 0.0.0.0 --port 2024"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./extensions_config.json:/app/extensions_config.json:ro
+      - deer-flow-data:/app/backend/.deer-flow
+      - ./skills:/app/skills:ro
+      - langgraph-api-data:/app/backend/.langgraph_api
+    environment:
+      - CI=true
+      - DEER_FLOW_HOME=/app/backend/.deer-flow
+      - DEER_FLOW_CONFIG_PATH=/app/config.yaml
+      - DEER_FLOW_EXTENSIONS_CONFIG_PATH=/app/extensions_config.json
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2:-false}
+    env_file:
+      - ./.env
+    networks:
+      - deer-flow
+    restart: unless-stopped
+
+volumes:
+  deer-flow-data:
+    driver: local
+  langgraph-api-data:
+    driver: local
+
+networks:
+  deer-flow:
+    driver: bridge

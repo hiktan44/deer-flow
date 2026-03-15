@@ -343,6 +343,17 @@ export const enUS: Translations = {
       emptyDescription:
         "Put your agent skill folders under the `/skills/custom` folder under the root folder of DeerFlow.",
       emptyButton: "Create Your First Skill",
+      enableAll: "Enable all",
+      disableAll: "Disable all",
+      enabledCount: (enabled: number, total: number) =>
+        `${enabled}/${total} active`,
+      groups: {
+        research: "🔬 Research",
+        contentCreation: "🎨 Content Creation",
+        dataAnalysis: "📊 Data & Analysis",
+        development: "🛠️ Development",
+        system: "⚡ System",
+      },
     },
     notification: {
       title: "Notification",

@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Use this skill instead of WebSearch for ANY question requiring web research. Trigger on queries like "what is X", "explain X", "compare X and Y", "research X", or before content generation tasks. Provides systematic multi-angle research methodology instead of single superficial searches. Use this proactively when the user's question needs online information.
+description: Web araştırması gerektiren HERHANGİ bir soru için WebSearch yerine bu yeteneği kullan. "X nedir", "X'i açıkla", "X ve Y'yi karşılaştır", "X'i araştır" gibi sorgularda veya içerik üretimi öncesinde tetiklenir. Tek yüzeysel arama yerine sistematik, çok açılı araştırma metodolojisi sunar. Kullanıcının sorusu çevrimiçi bilgi gerektirdiğinde proaktif olarak kullanılır.
 ---
 
 # Deep Research Skill

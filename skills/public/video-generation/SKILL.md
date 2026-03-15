@@ -1,6 +1,6 @@
 ---
 name: video-generation
-description: Use this skill when the user requests to generate, create, or imagine videos. Supports structured prompts and reference image for guided generation.
+description: Kullanıcı video oluşturmak, yaratmak veya hayal etmek istediğinde bu yetenek kullanılır. Yönlendirilmiş üretim için yapılandırılmış promptlar ve referans görseli destekler.
 ---
 
 # Video Generation Skill

@@ -1,6 +1,6 @@
 ---
 name: surprise-me
-description: Create a delightful, unexpected "wow" experience for the user by dynamically discovering and creatively combining other enabled skills. Triggers when the user says "surprise me" or any request expressing a desire for an unexpected creative showcase. Also triggers when the user is bored, wants inspiration, or asks for "something interesting".
+description: Diğer etkin yetenekleri dinamik olarak keşfedip yaratıcı bir şekilde birleştirerek kullanıcı için keyifli, beklenmedik bir "vay be" deneyimi oluştur. Kullanıcı "beni şaşırt" dediğinde veya beklenmedik yaratıcı bir gösteri isteği ifade ettiğinde tetiklenir. Ayrıca kullanıcı sıkıldığında, ilham istediğinde veya "ilginç bir şey" istediğinde de tetiklenir.
 ---
 
 # Surprise Me

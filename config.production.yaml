@@ -1,0 +1,94 @@
+# DeerFlow Production Configuration
+# API Keys are injected via environment variables (Coolify UI)
+
+models:
+  - name: gemini-3.1-pro-preview
+    display_name: Gemini 3.1 Pro Preview
+    use: langchain_google_genai:ChatGoogleGenerativeAI
+    model: gemini-3.1-pro-preview
+    google_api_key: $GEMINI_API_KEY
+    max_tokens: 8192
+    supports_vision: true
+    supports_thinking: true
+
+  - name: gemini-3.1-flash-lite-preview
+    display_name: Gemini 3.1 Flash Lite
+    use: langchain_google_genai:ChatGoogleGenerativeAI
+    model: gemini-3.1-flash-lite-preview
+    google_api_key: $GEMINI_API_KEY
+    max_tokens: 8192
+    supports_vision: true
+    supports_thinking: false
+
+tool_groups:
+  - name: web
+  - name: file:read
+  - name: file:write
+  - name: bash
+
+tools:
+  - name: web_search
+    group: web
+    use: src.community.tavily.tools:web_search_tool
+    max_results: 5
+  - name: web_fetch
+    group: web
+    use: src.community.jina_ai.tools:web_fetch_tool
+    timeout: 10
+  - name: image_search
+    group: web
+    use: src.community.image_search.tools:image_search_tool
+    max_results: 5
+  - name: ls
+    group: file:read
+    use: src.sandbox.tools:ls_tool
+  - name: read_file
+    group: file:read
+    use: src.sandbox.tools:read_file_tool
+  - name: write_file
+    group: file:write
+    use: src.sandbox.tools:write_file_tool
+  - name: str_replace
+    group: file:write
+    use: src.sandbox.tools:str_replace_tool
+  - name: bash
+    group: bash
+    use: src.sandbox.tools:bash_tool
+
+sandbox:
+  use: src.sandbox.local:LocalSandboxProvider
+
+skills:
+  container_path: /mnt/skills
+
+title:
+  enabled: true
+  max_words: 6
+  max_chars: 60
+  model_name: null
+
+summarization:
+  enabled: true
+  model_name: null
+  trigger:
+    - type: tokens
+      value: 15564
+  keep:
+    type: messages
+    value: 10
+  trim_tokens_to_summarize: 15564
+  summary_prompt: null
+
+memory:
+  enabled: true
+  storage_path: memory.json
+  debounce_seconds: 30
+  model_name: null
+  max_facts: 100
+  fact_confidence_threshold: 0.7
+  injection_enabled: true
+  max_injection_tokens: 2000
+
+checkpointer:
+  type: sqlite
+  connection_string: checkpoints.db

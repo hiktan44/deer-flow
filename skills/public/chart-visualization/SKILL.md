@@ -1,6 +1,6 @@
 ---
 name: chart-visualization
-description: This skill should be used when the user wants to visualize data. It intelligently selects the most suitable chart type from 26 available options, extracts parameters based on detailed specifications, and generates a chart image using a JavaScript script.
+description: Kullanıcı veri görselleştirmek istediğinde bu yetenek kullanılır. 26 mevcut grafik türünden en uygununu akıllıca seçer, detaylı spesifikasyonlara göre parametreleri çıkarır ve JavaScript betiği kullanarak grafik görseli oluşturur.
 dependency:
   nodejs: ">=18.0.0"
 ---

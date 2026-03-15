@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "enabled": true,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/app"],
+      "env": {},
+      "description": "File system access"
+    },
+    "memory": {
+      "enabled": true,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "description": "Entity-based memory"
+    },
+    "fetch": {
+      "enabled": true,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {},
+      "description": "HTTP fetch tool"
+    },
+    "tavily": {
+      "enabled": true,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "tavily-mcp@latest"],
+      "env": {
+        "TAVILY_API_KEY": "$TAVILY_API_KEY"
+      },
+      "description": "Tavily AI web search"
+    }
+  },
+  "skills": {}
+}

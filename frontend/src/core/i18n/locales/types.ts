@@ -276,6 +276,16 @@ export interface Translations {
       emptyTitle: string;
       emptyDescription: string;
       emptyButton: string;
+      enableAll: string;
+      disableAll: string;
+      enabledCount: (enabled: number, total: number) => string;
+      groups: {
+        research: string;
+        contentCreation: string;
+        dataAnalysis: string;
+        development: string;
+        system: string;
+      };
     };
     notification: {
       title: string;

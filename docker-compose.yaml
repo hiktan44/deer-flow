@@ -1,0 +1,79 @@
+# DeerFlow — Coolify Production Deployment
+# ⚠️ container_name YOK — Coolify kendi adlandırma kuralını uyguluyor
+# ⚠️ Volume mount YOK — config dosyaları Dockerfile'a COPY ediliyor
+# ⚠️ Custom network YOK — Coolify kendi network yönetimini kullanıyor
+
+services:
+  # ── Reverse Proxy ──────────────────────────────────────────────────────────
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    depends_on:
+      - gateway
+      - frontend
+      - langgraph
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # ── Frontend: Next.js Production ───────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: prod
+      args:
+        PNPM_STORE_PATH: /root/.local/share/pnpm/store
+    environment:
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-defaultsecret123456789012345678901234567890}
+      - BETTER_AUTH_BASE_URL=${BETTER_AUTH_BASE_URL:-http://localhost:2026}
+    restart: unless-stopped
+
+  # ── Gateway API ────────────────────────────────────────────────────────────
+  gateway:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.production
+    command: sh -c "cd backend && uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 --workers 2"
+    working_dir: /app
+    environment:
+      - CI=true
+      - DEER_FLOW_HOME=/app/backend/.deer-flow
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - JINA_API_KEY=${JINA_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - DATABASE_URL=${DATABASE_URL:-}
+      - VERCEL_API_KEY=${VERCEL_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # ── LangGraph Server ───────────────────────────────────────────────────────
+  langgraph:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.production
+    command: sh -c "cd /app/backend && uv run langgraph dev --no-browser --allow-blocking --no-reload --host 0.0.0.0 --port 2024"
+    environment:
+      - CI=true
+      - DEER_FLOW_HOME=/app/backend/.deer-flow
+      - DEER_FLOW_CONFIG_PATH=/app/config.yaml
+      - DEER_FLOW_EXTENSIONS_CONFIG_PATH=/app/extensions_config.json
+      - LANGCHAIN_TRACING_V2=false
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - JINA_API_KEY=${JINA_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - DATABASE_URL=${DATABASE_URL:-}
+      - VERCEL_API_KEY=${VERCEL_API_KEY:-}
+    restart: unless-stopped

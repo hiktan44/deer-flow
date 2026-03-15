@@ -328,6 +328,17 @@ export const zhCN: Translations = {
       emptyDescription:
         "将你的 Agent Skill 文件夹放在 DeerFlow 根目录下的 `/skills/custom` 文件夹中。",
       emptyButton: "创建你的第一个技能",
+      enableAll: "全部启用",
+      disableAll: "全部禁用",
+      enabledCount: (enabled: number, total: number) =>
+        `${enabled}/${total} 已启用`,
+      groups: {
+        research: "🔬 研究",
+        contentCreation: "🎨 内容创作",
+        dataAnalysis: "📊 数据与分析",
+        development: "🛠️ 开发",
+        system: "⚡ 系统",
+      },
     },
     notification: {
       title: "通知",

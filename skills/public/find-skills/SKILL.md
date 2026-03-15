@@ -1,6 +1,6 @@
 ---
 name: find-skills
-description: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.
+description: Kullanıcıların "X nasıl yapılır", "X için bir yetenek bul", "... yapabilen bir yetenek var mı" gibi sorular sorduğunda veya yetenekleri genişletmeye ilgi gösterdiğinde ajan yeteneklerini keşfetmelerine ve yüklemelerine yardımcı olur. Yüklenebilir bir yetenek olarak mevcut olabilecek işlevsellik arandığında kullanılmalıdır.
 ---
 
 # Find Skills
